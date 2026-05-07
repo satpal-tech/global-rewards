@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earn Points - Traffic Exchange</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background: #f0f4f8; text-align: center; padding: 20px; color: #333; }
+        .container { background: white; max-width: 450px; margin: auto; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 8px solid #28a745; }
+        .points-box { font-size: 28px; font-weight: bold; color: #28a745; margin: 20px 0; background: #e8f5e9; padding: 15px; border-radius: 12px; }
+        .instruction { font-size: 16px; color: #666; margin-bottom: 25px; line-height: 1.5; }
+        .btn-visit { background: #007bff; color: white; padding: 18px 30px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 18px; display: inline-block; cursor: pointer; border: none; width: 100%; box-shadow: 0 4px 10px rgba(0,123,255,0.3); transition: 0.3s; }
+        .btn-visit:disabled { background: #ccc; box-shadow: none; cursor: not-allowed; }
+        #timer-box { font-size: 18px; margin-top: 15px; display: none; color: #d9534f; font-weight: bold; }
+        #timer { font-size: 22px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="margin-top:0;">Traffic Exchange Hub</h2>
+    <p class="instruction">Visit the sponsored link below for 15 seconds to earn 100 points!</p>
+    
+    <div class="points-box">My Points: <span id="userPoints">0</span></div>
+
+    <div id="taskBox">
+        <button onclick="startTask('https://www.profitablecpmratenetwork.com/akhbrpi6k?key=156b726fcb4231d14e1e3ce0c0644ec0')" id="visitBtn" class="btn-visit">VISIT & EARN POINTS</button>
+        
+        <div id="timer-box">Please wait: <span id="timer">15</span> seconds...</div>
+    </div>
+    
+    <p style="font-size: 12px; color: #999; margin-top: 25px;">Points can be used to promote your own links soon!</p>
+</div>
+
+<script>
+    // ਪੁਆਇੰਟਾਂ ਨੂੰ ਮੋਬਾਈਲ ਦੀ ਮੈਮੋਰੀ ਵਿੱਚ ਸੇਵ ਕਰਨਾ
+    let points = localStorage.getItem('globalPoints') || 0;
+    document.getElementById('userPoints').innerText = points;
+
+    function startTask(url) {
+        let timeLeft = 15;
+        const btn = document.getElementById('visitBtn');
+        const timerBox = document.getElementById('timer-box');
+        const timerDisplay = document.getElementById('timer');
+        
+        // 1. ਨਵੀਂ ਟੈਬ ਵਿੱਚ ਤੁਹਾਡਾ Adsterra ਲਿੰਕ ਖੁੱਲ੍ਹੇਗਾ
+        window.open(url, '_blank');
+        
+        // 2. ਬਟਨ ਨੂੰ ਬੰਦ ਕਰਨਾ ਅਤੇ ਟਾਈਮਰ ਦਿਖਾਉਣਾ
+        btn.disabled = true;
+        btn.innerText = "Task in Progress...";
+        timerBox.style.display = "block";
+
+        const countdown = setInterval(() => {
+            timeLeft--;
+            timerDisplay.innerText = timeLeft;
+            
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                addPoints(100); // 100 ਪੁਆਇੰਟ ਦੇਣਾ
+                btn.disabled = false;
+                btn.innerText = "CLAIMED! VISIT AGAIN";
+                timerBox.style.display = "none";
+                timerDisplay.innerText = "15";
+                alert("Success! 100 Points added to your account.");
+            }
+        }, 1000);
+    }
+
+    function addPoints(p) {
+        points = parseInt(points) + p;
+        localStorage.setItem('globalPoints', points);
+        document.getElementById('userPoints').innerText = points;
+    }
+</script>
+
+</body>
+</html>
