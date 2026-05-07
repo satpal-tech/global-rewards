@@ -6,27 +6,17 @@
     <title>Global Traffic Exchange - Multi-User System</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; padding: 15px; text-align: center; }
-        
-        /* ਉੱਪਰ ਵਾਲਾ ਪੁਆਇੰਟ ਡੱਬਾ */
         .points-header { background: #28a745; color: white; padding: 15px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; max-width: 500px; margin-left: auto; margin-right: auto; }
         .points-header span { font-size: 22px; font-weight: bold; }
-
         .container { background: white; max-width: 500px; margin: auto; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 8px solid #007bff; }
-        
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .stat-item { background: #eef7ff; padding: 10px; border-radius: 10px; font-size: 14px; font-weight: bold; color: #007bff; }
-
         .submission-table { width: 100%; background: #fff; border: 1px solid #ddd; border-radius: 12px; border-collapse: collapse; overflow: hidden; }
         .submission-table th { background: #007bff; color: white; padding: 15px; font-size: 18px; }
         .submission-table td { padding: 20px; }
-
         input[type="text"] { width: 90%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; margin-bottom: 10px; }
-        
         .btn-boost { background: #ff9800; color: white; padding: 16px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; font-size: 18px; box-shadow: 0 4px 12px rgba(255,152,0,0.3); transition: 0.3s; }
-        .btn-boost:active { transform: scale(0.98); }
-
         .loading-box { display: none; margin-top: 15px; padding: 10px; border-radius: 10px; background: #fff3cd; color: #856404; font-weight: bold; font-size: 14px; }
-        
         .user-log { margin-top: 20px; font-size: 12px; color: #666; text-align: left; background: #f9f9f9; padding: 10px; border-radius: 8px; height: 60px; overflow: hidden; }
     </style>
 </head>
@@ -57,7 +47,6 @@
                 <td>
                     <input type="text" id="userUrl" placeholder="https://your-website.com">
                     <button class="btn-boost" onclick="startGlobalBoost()">START 1000+ VISITS BOOST</button>
-                    
                     <div id="statusBox" class="loading-box">⏳ Initializing Global Server...</div>
                 </td>
             </tr>
@@ -71,20 +60,28 @@
 </div>
 
 <script>
-    // ਪੁਆਇੰਟ ਲੋਕਲ ਸਟੋਰੇਜ ਤੋਂ ਲੈਣਾ (ਤਾਂ ਕਿ ਪੇਜ ਰਿਫ੍ਰੈਸ਼ ਕਰਨ 'ਤੇ ਵੀ ਰਹਿਣ)
     let points = parseInt(localStorage.getItem('satpalPoints')) || 0;
     document.getElementById('userPointsDisplay').innerText = points;
 
+    // ਲਿੰਕ ਚੈੱਕ ਕਰਨ ਵਾਲਾ ਫੰਕਸ਼ਨ
+    function isValidURL(string) {
+        var res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+        return (res !== null);
+    }
+
     function startGlobalBoost() {
-        const url = document.getElementById('userUrl').value;
+        const urlInput = document.getElementById('userUrl').value;
         const status = document.getElementById('statusBox');
 
-        if (url === "") {
-            alert("Please enter a valid URL to start boost!");
+        // 1. ਪਹਿਲਾਂ ਚੈੱਕ ਕਰੋ ਕਿ ਲਿੰਕ ਸਹੀ ਹੈ ਜਾਂ ਨਹੀਂ
+        if (urlInput === "" || !isValidURL(urlInput)) {
+            alert("❌ Invalid Link! Please enter a correct website URL (e.g., https://www.google.com)");
             return;
         }
 
         status.style.display = "block";
+        status.style.background = "#fff3cd";
+        status.style.color = "#856404";
         status.innerText = "⏳ System Connecting to USA Server...";
 
         setTimeout(() => {
@@ -94,7 +91,6 @@
                 // ਤੁਹਾਡਾ Adsterra Direct Link
                 window.open('https://www.profitablecpmratenetwork.com/akhbrpi6k?key=156b726fcb4231d14e1e3ce0c0644ec0', '_blank');
                 
-                // ਪੁਆਇੰਟ ਵਧਾਉਣਾ
                 points += 500;
                 localStorage.setItem('satpalPoints', points);
                 document.getElementById('userPointsDisplay').innerText = points;
@@ -103,7 +99,6 @@
                 status.style.color = "#155724";
                 status.innerText = "✅ Success! 500 Points Added. Traffic Starting...";
                 
-                // ਰੈਂਕ ਘਟਾਉਣਾ (ਲੱਗੇ ਕਿ ਯੂਜ਼ਰ ਅੱਗੇ ਜਾ ਰਿਹਾ ਹੈ)
                 let rank = document.getElementById('rank').innerText;
                 if(rank > 10) document.getElementById('rank').innerText = rank - 1;
 
@@ -111,17 +106,13 @@
         }, 2000);
     }
 
-    // ਲਾਈਵ ਡਰਾਮਾ (Live Log Updates)
     setInterval(() => {
         const log = document.getElementById('log');
         const users = ["82***", "10***", "55***", "29***"];
         const cities = ["London", "Toronto", "Punjab", "California"];
         let newUser = users[Math.floor(Math.random() * users.length)];
         let newCity = cities[Math.floor(Math.random() * cities.length)];
-        
         log.innerHTML = `<div>• User ${newUser} submitted from ${newCity}</div>` + log.innerHTML;
-        
-        // ਟੋਟਲ ਟ੍ਰੈਫਿਕ ਵਧਦੀ ਦਿਖਾਉਣਾ
         let traffic = parseFloat(document.getElementById('totalTraffic').innerText);
         document.getElementById('totalTraffic').innerText = (traffic + 0.1).toFixed(1) + "K";
     }, 4000);
