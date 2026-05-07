@@ -3,75 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Earn Points - Traffic Exchange</title>
+    <title>Global Traffic Exchange - Multi-User System</title>
     <style>
-        body { font-family: 'Arial', sans-serif; background: #f0f4f8; text-align: center; padding: 20px; color: #333; }
-        .container { background: white; max-width: 450px; margin: auto; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 8px solid #28a745; }
-        .points-box { font-size: 28px; font-weight: bold; color: #28a745; margin: 20px 0; background: #e8f5e9; padding: 15px; border-radius: 12px; }
-        .instruction { font-size: 16px; color: #666; margin-bottom: 25px; line-height: 1.5; }
-        .btn-visit { background: #007bff; color: white; padding: 18px 30px; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 18px; display: inline-block; cursor: pointer; border: none; width: 100%; box-shadow: 0 4px 10px rgba(0,123,255,0.3); transition: 0.3s; }
-        .btn-visit:disabled { background: #ccc; box-shadow: none; cursor: not-allowed; }
-        #timer-box { font-size: 18px; margin-top: 15px; display: none; color: #d9534f; font-weight: bold; }
-        #timer { font-size: 22px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; padding: 15px; text-align: center; }
+        
+        /* ਉੱਪਰ ਵਾਲਾ ਪੁਆਇੰਟ ਡੱਬਾ */
+        .points-header { background: #28a745; color: white; padding: 15px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; max-width: 500px; margin-left: auto; margin-right: auto; }
+        .points-header span { font-size: 22px; font-weight: bold; }
+
+        .container { background: white; max-width: 500px; margin: auto; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 8px solid #007bff; }
+        
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .stat-item { background: #eef7ff; padding: 10px; border-radius: 10px; font-size: 14px; font-weight: bold; color: #007bff; }
+
+        .submission-table { width: 100%; background: #fff; border: 1px solid #ddd; border-radius: 12px; border-collapse: collapse; overflow: hidden; }
+        .submission-table th { background: #007bff; color: white; padding: 15px; font-size: 18px; }
+        .submission-table td { padding: 20px; }
+
+        input[type="text"] { width: 90%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; margin-bottom: 10px; }
+        
+        .btn-boost { background: #ff9800; color: white; padding: 16px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; font-size: 18px; box-shadow: 0 4px 12px rgba(255,152,0,0.3); transition: 0.3s; }
+        .btn-boost:active { transform: scale(0.98); }
+
+        .loading-box { display: none; margin-top: 15px; padding: 10px; border-radius: 10px; background: #fff3cd; color: #856404; font-weight: bold; font-size: 14px; }
+        
+        .user-log { margin-top: 20px; font-size: 12px; color: #666; text-align: left; background: #f9f9f9; padding: 10px; border-radius: 8px; height: 60px; overflow: hidden; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2 style="margin-top:0;">Traffic Exchange Hub</h2>
-    <p class="instruction">Visit the sponsored link below for 15 seconds to earn 100 points!</p>
-    
-    <div class="points-box">My Points: <span id="userPoints">0</span></div>
+<div class="points-header">
+    <div>My Global Rank: <span style="font-size: 16px;">#<span id="rank">142</span></span></div>
+    <div>Total Points: <span id="userPointsDisplay">0</span></div>
+</div>
 
-    <div id="taskBox">
-        <button onclick="startTask('https://www.profitablecpmratenetwork.com/akhbrpi6k?key=156b726fcb4231d14e1e3ce0c0644ec0')" id="visitBtn" class="btn-visit">VISIT & EARN POINTS</button>
-        
-        <div id="timer-box">Please wait: <span id="timer">15</span> seconds...</div>
+<div class="container">
+    <h2 style="margin: 0 0 10px 0;">Traffic Exchange System</h2>
+    <p style="color: #666; font-size: 14px;">The more you boost, the more traffic you get from <b>USA, Canada, & UK</b>.</p>
+
+    <div class="stats-grid">
+        <div class="stat-item">Active Users: <span id="activeUsers">4,102</span></div>
+        <div class="stat-item">Traffic Sent: <span id="totalTraffic">82.4K</span></div>
     </div>
-    
-    <p style="font-size: 12px; color: #999; margin-top: 25px;">Points can be used to promote your own links soon!</p>
+
+    <table class="submission-table">
+        <thead>
+            <tr>
+                <th>Add Your Website Link</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <input type="text" id="userUrl" placeholder="https://your-website.com">
+                    <button class="btn-boost" onclick="startGlobalBoost()">START 1000+ VISITS BOOST</button>
+                    
+                    <div id="statusBox" class="loading-box">⏳ Initializing Global Server...</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="user-log" id="log">
+        <div>• User 92*** submitted a link from New York</div>
+        <div>• User 41*** earned 500 points</div>
+    </div>
 </div>
 
 <script>
-    // ਪੁਆਇੰਟਾਂ ਨੂੰ ਮੋਬਾਈਲ ਦੀ ਮੈਮੋਰੀ ਵਿੱਚ ਸੇਵ ਕਰਨਾ
-    let points = localStorage.getItem('globalPoints') || 0;
-    document.getElementById('userPoints').innerText = points;
+    // ਪੁਆਇੰਟ ਲੋਕਲ ਸਟੋਰੇਜ ਤੋਂ ਲੈਣਾ (ਤਾਂ ਕਿ ਪੇਜ ਰਿਫ੍ਰੈਸ਼ ਕਰਨ 'ਤੇ ਵੀ ਰਹਿਣ)
+    let points = parseInt(localStorage.getItem('satpalPoints')) || 0;
+    document.getElementById('userPointsDisplay').innerText = points;
 
-    function startTask(url) {
-        let timeLeft = 15;
-        const btn = document.getElementById('visitBtn');
-        const timerBox = document.getElementById('timer-box');
-        const timerDisplay = document.getElementById('timer');
-        
-        // 1. ਨਵੀਂ ਟੈਬ ਵਿੱਚ ਤੁਹਾਡਾ Adsterra ਲਿੰਕ ਖੁੱਲ੍ਹੇਗਾ
-        window.open(url, '_blank');
-        
-        // 2. ਬਟਨ ਨੂੰ ਬੰਦ ਕਰਨਾ ਅਤੇ ਟਾਈਮਰ ਦਿਖਾਉਣਾ
-        btn.disabled = true;
-        btn.innerText = "Task in Progress...";
-        timerBox.style.display = "block";
+    function startGlobalBoost() {
+        const url = document.getElementById('userUrl').value;
+        const status = document.getElementById('statusBox');
 
-        const countdown = setInterval(() => {
-            timeLeft--;
-            timerDisplay.innerText = timeLeft;
+        if (url === "") {
+            alert("Please enter a valid URL to start boost!");
+            return;
+        }
+
+        status.style.display = "block";
+        status.innerText = "⏳ System Connecting to USA Server...";
+
+        setTimeout(() => {
+            status.innerText = "🚀 Verification Required: Click 'OK' and stay for 15s to add 500 points!";
             
-            if (timeLeft <= 0) {
-                clearInterval(countdown);
-                addPoints(100); // 100 ਪੁਆਇੰਟ ਦੇਣਾ
-                btn.disabled = false;
-                btn.innerText = "CLAIMED! VISIT AGAIN";
-                timerBox.style.display = "none";
-                timerDisplay.innerText = "15";
-                alert("Success! 100 Points added to your account.");
-            }
-        }, 1000);
+            setTimeout(() => {
+                // ਤੁਹਾਡਾ Adsterra Direct Link
+                window.open('https://www.profitablecpmratenetwork.com/akhbrpi6k?key=156b726fcb4231d14e1e3ce0c0644ec0', '_blank');
+                
+                // ਪੁਆਇੰਟ ਵਧਾਉਣਾ
+                points += 500;
+                localStorage.setItem('satpalPoints', points);
+                document.getElementById('userPointsDisplay').innerText = points;
+                
+                status.style.background = "#d4edda";
+                status.style.color = "#155724";
+                status.innerText = "✅ Success! 500 Points Added. Traffic Starting...";
+                
+                // ਰੈਂਕ ਘਟਾਉਣਾ (ਲੱਗੇ ਕਿ ਯੂਜ਼ਰ ਅੱਗੇ ਜਾ ਰਿਹਾ ਹੈ)
+                let rank = document.getElementById('rank').innerText;
+                if(rank > 10) document.getElementById('rank').innerText = rank - 1;
+
+            }, 1500);
+        }, 2000);
     }
 
-    function addPoints(p) {
-        points = parseInt(points) + p;
-        localStorage.setItem('globalPoints', points);
-        document.getElementById('userPoints').innerText = points;
-    }
+    // ਲਾਈਵ ਡਰਾਮਾ (Live Log Updates)
+    setInterval(() => {
+        const log = document.getElementById('log');
+        const users = ["82***", "10***", "55***", "29***"];
+        const cities = ["London", "Toronto", "Punjab", "California"];
+        let newUser = users[Math.floor(Math.random() * users.length)];
+        let newCity = cities[Math.floor(Math.random() * cities.length)];
+        
+        log.innerHTML = `<div>• User ${newUser} submitted from ${newCity}</div>` + log.innerHTML;
+        
+        // ਟੋਟਲ ਟ੍ਰੈਫਿਕ ਵਧਦੀ ਦਿਖਾਉਣਾ
+        let traffic = parseFloat(document.getElementById('totalTraffic').innerText);
+        document.getElementById('totalTraffic').innerText = (traffic + 0.1).toFixed(1) + "K";
+    }, 4000);
 </script>
 
 </body>
