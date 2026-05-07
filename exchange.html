@@ -3,17 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Traffic Exchange - Smart Reset System</title>
+    <title>Global Traffic Exchange - Live Tracker</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; padding: 15px; text-align: center; }
-        .points-header { background: #28a745; color: white; padding: 15px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; max-width: 500px; margin-left: auto; margin-right: auto; }
-        .points-header span { font-size: 22px; font-weight: bold; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 15px; text-align: center; }
+        .points-header { background: #28a745; color: white; padding: 15px; border-radius: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; max-width: 500px; margin-left: auto; margin-right: auto; }
         .container { background: white; max-width: 500px; margin: auto; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 8px solid #007bff; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .stat-item { background: #eef7ff; padding: 10px; border-radius: 10px; font-size: 14px; font-weight: bold; color: #007bff; }
-        input[type="text"] { width: 90%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; margin-bottom: 10px; }
-        .btn-boost { background: #ff9800; color: white; padding: 16px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; font-size: 18px; box-shadow: 0 4px 12px rgba(255,152,0,0.3); transition: 0.3s; }
-        .loading-box { display: none; margin-top: 15px; padding: 10px; border-radius: 10px; background: #fff3cd; color: #856404; font-weight: bold; }
+        
+        input[type="text"] { width: 90%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; margin-bottom: 10px; }
+        .btn-boost { background: #ff9800; color: white; padding: 16px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; font-size: 18px; }
+        
+        /* ਨਵਾਂ ਲਾਈਵ ਐਕਟੀਵਿਟੀ ਡਿਸਪਲੇਅ (Bottom Display) */
+        .live-tracker { margin-top: 25px; background: #222; border-radius: 15px; padding: 10px; overflow: hidden; height: 150px; position: relative; border: 2px solid #444; }
+        .tracker-title { color: #00ff00; font-size: 12px; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; border-bottom: 1px solid #444; padding-bottom: 5px; }
+        
+        .scroll-container { position: absolute; width: 100%; animation: scrollUp 15s linear infinite; }
+        .log-entry { color: #ddd; font-size: 13px; padding: 5px 0; border-bottom: 1px solid #333; display: flex; justify-content: space-around; }
+        .log-name { color: #5bc0de; font-weight: bold; }
+        .log-rank { color: #f0ad4e; }
+        
+        @keyframes scrollUp {
+            0% { bottom: -100%; }
+            100% { bottom: 100%; }
+        }
+
+        .loading-box { display: none; margin-top: 15px; padding: 10px; border-radius: 10px; background: #fff3cd; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -25,20 +38,45 @@
 
 <div class="container">
     <h2>🚀 Traffic Booster</h2>
-    <p style="color: #666; font-size: 14px;">Points will reset if you change your website link!</p>
-
-    <div class="stats-grid">
-        <div class="stat-item">Status: <span id="linkStatus" style="color:red;">No Link Active</span></div>
-        <div class="stat-item">Active Users: 4,102</div>
-    </div>
+    <p style="color: #666; font-size: 13px;">Enter link to start worldwide traffic exchange.</p>
 
     <input type="text" id="userUrl" placeholder="Enter Website Link (https://...)">
-    <button class="btn-boost" onclick="processBoost()">START BOOST</button>
+    <button class="btn-boost" onclick="processBoost()">START BOOST NOW</button>
     
     <div id="statusBox" class="loading-box"></div>
+
+    <div class="live-tracker">
+        <div class="tracker-title">● Live Global Activity</div>
+        <div class="scroll-container" id="liveLogs">
+            </div>
+    </div>
 </div>
 
 <script>
+    // ਨਾਮਾਂ ਦੀ ਲਿਸਟ
+    const names = ["James", "Robert", "John", "Michael", "William", "David", "Richard", "Joseph", "Thomas", "Charles", "Emma", "Olivia", "Sophia", "Isabella", "Mia"];
+    const logsContainer = document.getElementById('liveLogs');
+
+    // ਫੇਕ ਲੌਗਸ ਬਣਾਉਣ ਦਾ ਫੰਕਸ਼ਨ
+    function generateLogs() {
+        let html = '';
+        for (let i = 0; i < 20; i++) {
+            let randomName = names[Math.floor(Math.random() * names.length)];
+            let randomRank = Math.floor(Math.random() * 499) + 1;
+            let randomPoints = (Math.floor(Math.random() * 10) + 1) * 100;
+            html += `
+                <div class="log-entry">
+                    <span class="log-name">${randomName}</span>
+                    <span class="log-rank">Rank #${randomRank}</span>
+                    <span style="color:#28a745;">+${randomPoints} pts</span>
+                </div>`;
+        }
+        logsContainer.innerHTML = html;
+    }
+
+    // ਸ਼ੁਰੂ ਵਿੱਚ ਲੌਗਸ ਜਨਰੇਟ ਕਰੋ
+    generateLogs();
+
     function isValidURL(string) {
         var res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
         return (res !== null);
@@ -49,34 +87,25 @@
         const status = document.getElementById('statusBox');
         
         if (currentUrl === "" || !isValidURL(currentUrl)) {
-            alert("❌ Please enter a valid website link!");
+            alert("❌ Invalid Link!");
             return;
         }
 
-        // ਮੈਮੋਰੀ ਵਿੱਚੋਂ ਪੁਰਾਣਾ ਡਾਟਾ ਚੈੱਕ ਕਰਨਾ
         let savedUrl = localStorage.getItem('lastSavedUrl');
         let points = parseInt(localStorage.getItem('satpalPoints')) || 0;
         let rank = parseInt(localStorage.getItem('satpalRank')) || 500;
 
-        // ਜੇ ਲਿੰਕ ਬਦਲ ਗਿਆ ਹੈ, ਤਾਂ ਰੀਸੈਟ ਕਰੋ
         if (savedUrl && savedUrl !== currentUrl) {
-            alert("⚠️ New link detected! Your points have been reset to 0.");
-            points = 0;
-            rank = 500;
+            alert("⚠️ Link changed! Resetting points.");
+            points = 0; rank = 500;
         }
 
-        // ਨਵੇਂ ਲਿੰਕ ਨੂੰ ਸੇਵ ਕਰੋ
         localStorage.setItem('lastSavedUrl', currentUrl);
-        document.getElementById('linkStatus').innerText = "Link Active";
-        document.getElementById('linkStatus').style.color = "green";
-
         status.style.display = "block";
-        status.innerText = "⏳ Verifying with USA Server...";
+        status.innerText = "⏳ Verifying Link...";
 
         setTimeout(() => {
             window.open('https://www.profitablecpmratenetwork.com/akhbrpi6k?key=156b726fcb4231d14e1e3ce0c0644ec0', '_blank');
-            
-            // ਪੁਆਇੰਟ ਅਤੇ ਰੈਂਕ ਅਪਡੇਟ
             points += 100;
             if(rank > 1) rank -= 1;
 
@@ -85,21 +114,16 @@
             
             document.getElementById('userPointsDisplay').innerText = points;
             document.getElementById('rankDisplay').innerText = "#" + rank;
-            
-            status.innerText = "✅ 100 Points Added! Link Boosing...";
-            setTimeout(() => { status.style.display = "none"; }, 3000);
+            status.innerText = "✅ Success! Points Added.";
         }, 2000);
     }
 
-    // ਪੇਜ ਲੋਡ ਹੋਣ 'ਤੇ ਪੁਰਾਣਾ ਡਾਟਾ ਦਿਖਾਉਣਾ
     window.onload = function() {
         let savedUrl = localStorage.getItem('lastSavedUrl');
         if(savedUrl) {
             document.getElementById('userUrl').value = savedUrl;
             document.getElementById('userPointsDisplay').innerText = localStorage.getItem('satpalPoints') || 0;
             document.getElementById('rankDisplay').innerText = "#" + (localStorage.getItem('satpalRank') || 500);
-            document.getElementById('linkStatus').innerText = "Link Active";
-            document.getElementById('linkStatus').style.color = "green";
         }
     }
 </script>
