@@ -3,143 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pendu Tech - Organic CTR & Traffic Booster</title>
+    <title>Pendu Tech - Organic Exchange</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <style>
-        :root { --primary: #1a73e8; --success: #34a853; --dark: #202124; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; margin: 0; padding: 15px; color: #333; }
-        .wrapper { max-width: 500px; margin: auto; background: #fff; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid #e0e0e0; }
-        .header { background: var(--primary); color: white; padding: 20px; text-align: center; }
-        .header h1 { margin: 0; font-size: 22px; letter-spacing: 1px; }
-        .header p { margin: 5px 0 0; font-size: 13px; opacity: 0.9; }
-        .content { padding: 20px; }
-        
-        /* Proof Section */
-        .status-badge { display: flex; align-items: center; justify-content: center; background: #e8f0fe; padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #c2d7fa; }
-        .status-badge img { width: 20px; margin-right: 8px; }
-        .proof-container { text-align: center; margin-bottom: 20px; }
-        .proof-container img { width: 100%; border-radius: 10px; border: 2px solid #eee; transition: 0.3s; cursor: pointer; }
-        .proof-container img:hover { transform: scale(1.02); }
-
-        /* Payment Section */
-        .payment-card { background: #fff9c4; border-left: 5px solid #fbc02d; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
-        .payment-card h4 { margin: 0 0 8px; color: #856404; }
-        .upi-id { font-weight: bold; color: #d32f2f; background: #fff; padding: 2px 5px; border-radius: 4px; }
-        .paypal-link { display: inline-block; margin-top: 10px; background: #0070ba; color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; font-size: 14px; font-weight: bold; }
-
-        /* Form Section */
-        .form-group { margin-bottom: 15px; }
-        label { font-weight: 600; font-size: 14px; color: #555; display: block; margin-bottom: 5px; }
-        input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 15px; outline: none; }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 5px rgba(26,115,232,0.2); }
-        
-        .start-btn { background: var(--success); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .start-btn:hover { background: #2d8e47; box-shadow: 0 5px 15px rgba(52, 168, 83, 0.3); }
-
-        /* Terminal & Timer */
-        .console { display: none; background: var(--dark); color: #00ff41; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 12px; margin-top: 15px; height: 100px; overflow-y: auto; border: 1px solid #444; }
-        #timer-box { display: none; margin-top: 20px; text-align: center; padding: 15px; background: #f1f8e9; border-radius: 10px; }
-        progress { width: 100%; height: 20px; border-radius: 10px; accent-color: var(--success); }
-        .footer-note { font-size: 11px; color: #888; text-align: center; margin-top: 15px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; padding: 15px; }
+        .container { max-width: 450px; margin: 20px auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .hidden { display: none; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; }
+        .btn-blue { background: #1a73e8; color: white; }
+        .btn-green { background: #34a853; color: white; }
+        .status-tag { padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 15px; }
+        .pending { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .active { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .terminal { background: #1c1c1c; color: #00ff41; padding: 10px; border-radius: 5px; font-family: monospace; font-size: 12px; margin-top: 10px; height: 80px; overflow-y: auto; display: none; }
     </style>
 </head>
 <body>
 
-<div class="wrapper">
-    <div class="header">
-        <h1>PENDU TECH 🚀</h1>
-        <p>Organic CTR Booster | Google News Active Edition</p>
-    </div>
+<div class="container" id="authBox">
+    <h2 style="text-align:center; color:#1a73e8;">Pendu Tech Login</h2>
+    <input type="email" id="email" placeholder="Email ID">
+    <input type="password" id="pass" placeholder="Password">
+    <button class="btn btn-blue" onclick="loginUser()">Login / Register</button>
+</div>
 
-    <div class="content">
-        <div class="status-badge">
-            <span style="color: #1a73e8; font-weight: bold;">✔ Google Publisher Status: ACTIVE</span>
-        </div>
-        
-        <div class="proof-container">
-            <img src="https://i.postimg.cc/QVHzsBHD/1000479335.jpg" alt="Pendu Tech Proof" title="Click to view proof">
-            <small style="color: #666;">(ਸਾਡੀ ਸਫਲਤਾ ਦਾ ਅਸਲੀ ਸਬੂਤ - Google News Approved)</small>
-        </div>
+<div class="container hidden" id="userDashboard">
+    <h3>ਜੀ ਆਇਆਂ ਨੂੰ, <span id="userDisp" style="color:#1a73e8;"></span></h3>
+    <div id="statusTag" class="status-tag pending">ਸਟੇਟਸ: ਪੇਮੈਂਟ ਦੀ ਉਡੀਕ ਹੈ...</div>
+    
+    <label>Target Keyword:</label>
+    <input type="text" id="keyword" placeholder="e.g. Pendu Tech Punjab">
+    
+    <label>Website URL:</label>
+    <input type="url" id="siteURL" placeholder="https://yourblog.com">
 
-        <div class="payment-card">
-            <h4>Price: $3 (₹250) Per 150 Clicks</h4>
-            <p>UPI ID: <span class="upi-id">9814005098@ybl</span></p>
-            <a href="https://paypal.me/satpalakoi" target="_blank" class="paypal-link">Pay via PayPal (International)</a>
-        </div>
-
-        <div class="form-group">
-            <label>Target Keyword (ਜੋ ਗੂਗਲ 'ਤੇ ਸਰਚ ਕਰਨਾ ਹੈ):</label>
-            <input type="text" id="targetKW" placeholder="e.g. Pendu Tech Punjab">
-        </div>
-
-        <div class="form-group">
-            <label>Website URL (ਜਿਸ 'ਤੇ ਟ੍ਰੈਫਿਕ ਭੇਜਣਾ ਹੈ):</label>
-            <input type="url" id="targetURL" placeholder="https://pendutechpunjab.blogspot.com">
-        </div>
-
-        <button class="start-btn" onclick="initiateSystem()">Lauch Organic Traffic</button>
-
-        <div class="console" id="consoleLogs"></div>
-
-        <div id="timer-box">
-            <p>Stay Time: <span id="seconds">120</span> Seconds</p>
-            <progress value="0" max="120" id="pBar"></progress>
-            <p style="font-size: 12px; color: #555; margin-top: 8px;">ਸਾਵਧਾਨ: 150+ IPs ਤੋਂ ਟ੍ਰੈਫਿਕ ਭੇਜਿਆ ਜਾ ਰਿਹਾ ਹੈ। ਪੇਜ ਬੰਦ ਨਾ ਕਰੋ।</p>
-        </div>
-
-        <div class="footer-note">
-            © 2026 Pendu Tech Punjab | All Rights Reserved.
-        </div>
-    </div>
+    <button id="runBtn" class="btn btn-green" style="opacity:0.4;" disabled onclick="startBoost()">Launch Traffic Booster</button>
+    
+    <div class="terminal" id="term"></div>
+    <p id="lockMsg" style="color:red; font-size:12px; text-align:center; margin-top:10px;">*ਸੌਫਟਵੇਅਰ ਚਲਾਉਣ ਲਈ ਐਡਮਿਨ ਤੋਂ ਆਈਡੀ ਐਕਟਿਵ ਕਰਵਾਓ।</p>
 </div>
 
 <script>
-    function printLog(text) {
-        const logBox = document.getElementById('consoleLogs');
-        logBox.innerHTML += "> " + text + "<br>";
-        logBox.scrollTop = logBox.scrollHeight;
-    }
+    const firebaseConfig = {
+        apiKey: "AIzaSyANi2n_ludMyRM0y40I2TxPDIrQ3tRsoDU",
+        authDomain: "satpal-f535c.firebaseapp.com",
+        projectId: "satpal-f535c",
+        storageBucket: "satpal-f535c.firebasestorage.app",
+        messagingSenderId: "480222653659",
+        appId: "1:480222653659:web:8408ba7ccc5a34c09ef0fe"
+    };
 
-    function initiateSystem() {
-        const kw = document.getElementById('targetKW').value;
-        const link = document.getElementById('targetURL').value;
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-        if(!kw || !link) {
-            alert("ਕਿਰਪਾ ਕਰਕੇ ਸਾਰੇ ਵੇਰਵੇ ਭਰੋ!");
-            return;
-        }
+    function loginUser() {
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('pass').value;
+        if(!email || !pass) return alert("Details ਭਰੋ");
 
-        document.getElementById('consoleLogs').style.display = 'block';
-        printLog("ਸਰਵਰ ਨਾਲ ਸੰਪਰਕ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...");
+        const userId = email.replace(/[^a-zA-Z0-9]/g, "");
+        const userRef = db.collection("users").doc(userId);
         
-        setTimeout(() => {
-            printLog("Unique Residential IPs ਲੋਡ ਹੋ ਰਹੀਆਂ ਹਨ...");
-            setTimeout(() => {
-                printLog("Google Search Referral ਤਿਆਰ ਹੈ।");
-                printLog("<a href='https://www.google.com/search?q=" + encodeURIComponent(kw) + "' target='_blank' style='color:#fff; background:#4285f4; padding:3px 8px; border-radius:4px; text-decoration:none;'>CLICK HERE TO SEARCH & VISIT</a>");
-                startClock();
-            }, 1500);
-        }, 1500);
+        userRef.get().then((doc) => {
+            if (doc.exists) {
+                renderDashboard(doc.data());
+            } else {
+                const newUser = { email, password: pass, status: "pending", timestamp: new Date() };
+                userRef.set(newUser).then(() => renderDashboard(newUser));
+            }
+        });
     }
 
-    function startClock() {
-        document.getElementById('timer-box').style.display = 'block';
-        let timeLeft = 120;
-        const progress = document.getElementById('pBar');
-        const text = document.getElementById('seconds');
+    function renderDashboard(data) {
+        document.getElementById('authBox').classList.add('hidden');
+        document.getElementById('userDashboard').classList.remove('hidden');
+        document.getElementById('userDisp').innerText = data.email;
+        
+        if(data.status === "active") {
+            const tag = document.getElementById('statusTag');
+            tag.className = "status-tag active";
+            tag.innerText = "Status: ACTIVE ✅";
+            document.getElementById('runBtn').disabled = false;
+            document.getElementById('runBtn').style.opacity = "1";
+            document.getElementById('lockMsg').style.display = "none";
+        }
+    }
 
-        const timer = setInterval(() => {
-            timeLeft--;
-            text.innerText = timeLeft;
-            progress.value = 120 - timeLeft;
-
-            if(timeLeft <= 0) {
-                clearInterval(timer);
-                printLog("ਪ੍ਰਕਿਰਿਆ ਪੂਰੀ ਹੋਈ! CTR ਬੂਸਟ ਕਰ ਦਿੱਤਾ ਗਿਆ ਹੈ। ✅");
-                alert("ਕੰਮ ਸਫਲਤਾਪੂਰਵਕ ਪੂਰਾ ਹੋਇਆ। 150 ਬੈਕਲਿੰਕਸ ਪ੍ਰੋਸੈਸ ਹੋ ਗਏ ਹਨ।");
-            }
-        }, 1000);
+    function startBoost() {
+        const term = document.getElementById('term');
+        term.style.display = 'block';
+        term.innerHTML = "> Connecting to Pendu Tech Servers...<br>> Verifying 150+ IPs...<br>> Starting Organic Traffic Flow...";
+        alert("ਸਿਸਟਮ ਸ਼ੁਰੂ ਹੋ ਗਿਆ ਹੈ। ਪੇਜ ਬੰਦ ਨਾ ਕਰੋ।");
     }
 </script>
-
 </body>
 </html>
