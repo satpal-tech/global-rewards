@@ -1,193 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pa">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pendu Tech | Premium Traffic Engine</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Submit Proof - $1 Payment</title>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-storage-compat.js"></script>
     <style>
-        :root {
-            --primary: #00d2ff;
-            --accent: #3a7bd5;
-            --success: #3dfc94;
-            --glass: rgba(255, 255, 255, 0.08);
-        }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            color: #fff; margin: 0; padding: 20px;
-            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
-        }
-        .container {
-            width: 100%; max-width: 450px; background: var(--glass);
-            backdrop-filter: blur(20px); padding: 30px; border-radius: 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center;
-            border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;
-        }
-        .hidden { display: none; }
-        input {
-            width: 100%; padding: 12px; margin: 10px 0; border-radius: 12px; border: none;
-            background: rgba(255,255,255,0.1); color: #fff; outline: none; box-sizing: border-box;
-        }
-        .btn {
-            width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: 600;
-            text-transform: uppercase; cursor: pointer; transition: 0.3s; margin-top: 10px;
-        }
-        .btn-auth { background: linear-gradient(to right, #00d2ff, #3a7bd5); color: #fff; }
-        .btn-upload { background: #ff416c; color: #fff; }
-        .btn-boost { background: linear-gradient(to right, #1d976c, #93f9b9); color: #121212; opacity: 0.3; }
-
-        .status-card {
-            background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 15px;
-            margin-bottom: 20px; font-size: 12px; color: #ffcc80; border-left: 5px solid #ffcc80;
-        }
-        .upload-box { border: 2px dashed rgba(255,255,255,0.2); padding: 20px; border-radius: 15px; margin: 10px 0; }
-
-        /* Policy & Contact Boxes */
-        .policy-box {
-            width: 100%; max-width: 450px; background: rgba(0,0,0,0.4);
-            padding: 25px; border-radius: 20px; margin-top: 15px;
-            border: 1px solid rgba(255,255,255,0.1); text-align: left;
-        }
-        .policy-box h3 { font-size: 18px; color: var(--primary); margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
-        .policy-box p { font-size: 12px; opacity: 0.8; line-height: 1.7; margin-bottom: 10px; }
-        .policy-box ul { font-size: 12px; opacity: 0.8; padding-left: 15px; }
-        .error-msg { color: #ff4b2b; font-size: 11px; display: none; text-align: left; margin-bottom: 5px; }
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; text-align: center; padding: 20px; }
+        .container { background: white; padding: 20px; border-radius: 10px; max-width: 400px; margin: auto; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
+        .rate-tag { background: #28a745; color: white; padding: 10px; border-radius: 5px; font-weight: bold; margin-bottom: 20px; font-size: 1.2em; }
+        input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 1em; }
+        button:hover { background: #0056b3; }
     </style>
 </head>
 <body>
 
-<div class="container" id="authBox">
-    <h2>Secure Access</h2>
-    <p style="font-size: 12px; opacity: 0.7;">Use your primary email for official verification.</p>
+<div class="container">
+    <h2>Submit Your Details</h2>
+    <div class="rate-tag">Payment Rate: $1 Per Task</div>
+
+    <input type="text" id="userName" placeholder="ਤੁਹਾਡਾ ਨਾਮ (Full Name)">
+    <input type="text" id="userPhone" placeholder="ਪੇਟੀਐਮ ਜਾਂ ਫੋਨ ਨੰਬਰ">
+    <input type="text" id="userLocation" placeholder="ਲੋਕੇਸ਼ਨ ਲਿੰਕ">
+    <p style="text-align:left; margin-left:20px;">Proof ਫੋਟੋ ਚੁਣੋ:</p>
+    <input type="file" id="userPhoto" accept="image/*">
     
-    <input type="email" id="email" placeholder="Real Email (e.g. user@gmail.com)" oninput="checkEmail()">
-    <div id="emailError" class="error-msg">⚠️ Invalid email format!</div>
-    
-    <input type="password" id="pass" placeholder="Password">
-    <button class="btn btn-auth" onclick="loginUser()">Sign In to Dashboard</button>
+    <button onclick="submitData()" id="subBtn">Submit & Earn $1</button>
 </div>
-
-<div class="container hidden" id="userDashboard">
-    <h3>Traffic Engine</h3>
-    <div id="statusTag" class="status-card">
-        <b>ID STATUS: PENDING</b><br>
-        Upload payment proof to activate your organic traffic session.
-    </div>
-
-    <div class="upload-box">
-        <input type="file" id="screenshotFile" accept="image/*" style="display: none;" onchange="validateFile()">
-        <div onclick="document.getElementById('screenshotFile').click()" style="cursor:pointer;">
-            <span id="fileName" style="font-size: 13px;">Click to Upload Receipt</span>
-        </div>
-        <button id="uploadBtn" class="btn btn-upload" style="margin-top: 15px; opacity: 0.5;" disabled onclick="uploadScreenshot()">Submit Proof</button>
-    </div>
-
-    <input type="text" id="keyword" placeholder="Target Keyword">
-    <input type="url" id="siteURL" placeholder="Site URL (https://...)">
-    <button id="runBtn" class="btn btn-boost" disabled onclick="startBoost()">Launch Engine</button>
-</div>
-
-<div class="policy-box">
-    <h3>About Us & Usage Policy</h3>
-    <p><b>Pendu Tech</b> is an advanced Organic Traffic Exchange platform. By using our services, you agree to the following policies:</p>
-    <ul>
-        <li><b>Organic Growth:</b> We use a high-quality residential IP network (150+ IPs) to provide safe engagement.</li>
-        <li><b>Account Security:</b> Only valid email addresses are eligible for manual approval. Fake emails will be permanently banned.</li>
-        <li><b>Refund Policy:</b> Once the traffic engine is initialized for your URL, payments are non-refundable.</li>
-        <li><b>Privacy:</b> We do not share your website URLs or personal data with third parties.</li>
-    </ul>
-</div>
-
-<div class="policy-box">
-    <h3>Contact Support</h3>
-    <p>If you face any issues regarding account activation or payment verification, please contact our official support desk:</p>
-    <p style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px;">
-        📧 <b>Email:</b> vijaytech002@gmail.com<br>
-        🕒 <b>Response Time:</b> Within 12-24 Hours
-    </p>
-</div>
-
-<p style="font-size: 10px; margin-top: 20px; opacity: 0.4;">© 2026 Pendu Tech | Professional Organic Traffic Solutions</p>
 
 <script>
+    // ਇੱਥੇ ਆਪਣੀ ਫਾਇਰਬੇਸ ਕਨਫਿਗ ਭਰੋ
     const firebaseConfig = {
-        apiKey: "AIzaSyANi2n_ludMyRM0y40I2TxPDIrQ3tRsoDU",
+        apiKey: "ਤੁਹਾਡੀ_API_KEY",
         authDomain: "satpal-f535c.firebaseapp.com",
         projectId: "satpal-f535c",
-        storageBucket: "satpal-f535c.firebasestorage.app",
-        messagingSenderId: "480222653659",
-        appId: "1:480222653659:web:8408ba7ccc5a34c09ef0fe"
+        storageBucket: "satpal-f535c.appspot.com",
+        messagingSenderId: "ਤੁਹਾਡਾ_SENDER_ID",
+        appId: "ਤੁਹਾਡਾ_APP_ID"
     };
-
+    
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+    const storage = firebase.storage();
 
-    function checkEmail() {
-        const email = document.getElementById('email').value;
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        document.getElementById('emailError').style.display = regex.test(email) ? 'none' : 'block';
-        return regex.test(email);
-    }
+    async function submitData() {
+        const name = document.getElementById('userName').value;
+        const phone = document.getElementById('userPhone').value;
+        const loc = document.getElementById('userLocation').value;
+        const file = document.getElementById('userPhoto').files[0];
+        const btn = document.getElementById('subBtn');
 
-    function loginUser() {
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('pass').value;
-        if(!checkEmail()) return alert("Enter a valid email address.");
-        if(!pass) return alert("Password is required.");
+        if(!name || !phone || !file) {
+            return alert("ਕਿਰਪਾ ਕਰਕੇ ਸਾਰੀ ਜਾਣਕਾਰੀ ਭਰੋ ਅਤੇ ਫੋਟੋ ਚੁਣੋ।");
+        }
 
-        const userId = email.replace(/[^a-zA-Z0-9]/g, "");
-        const userRef = db.collection("users").doc(userId);
-        
-        userRef.get().then((doc) => {
-            if (doc.exists) renderDashboard(doc.data());
-            else {
-                const newUser = { email, password: pass, status: "pending", timestamp: new Date() };
-                userRef.set(newUser).then(() => renderDashboard(newUser));
-            }
-        });
-    }
+        btn.disabled = true;
+        btn.innerText = "Processing...";
 
-    function validateFile() {
-        const file = document.getElementById('screenshotFile').files[0];
-        if(file) {
-            document.getElementById('fileName').innerText = "File: " + file.name;
-            document.getElementById('uploadBtn').disabled = false;
-            document.getElementById('uploadBtn').style.opacity = "1";
+        try {
+            // 1. Storage ਵਿੱਚ ਫੋਟੋ ਅਪਲੋਡ ਕਰਨਾ
+            const storageRef = storage.ref('proofs/' + Date.now() + "_" + file.name);
+            const uploadTask = await storageRef.put(file);
+            const photoUrl = await uploadTask.ref.getDownloadURL();
+
+            // 2. Firestore ਵਿੱਚ ਡੇਟਾ ਸੇਵ ਕਰਨਾ
+            await db.collection("orders").add({
+                name: name,
+                phone: phone,
+                location: loc,
+                photo: photoUrl,
+                rate: "$1",
+                status: "Pending",
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            alert("ਸਫਲਤਾਪੂਰਵਕ ਸਬਮਿਟ ਹੋ ਗਿਆ! ਤੁਹਾਨੂੰ $1 ਜਲਦੀ ਮਿਲੇਗਾ।");
+            location.reload();
+        } catch (error) {
+            console.error(error);
+            alert("ਐਰਰ: " + error.message);
+            btn.disabled = false;
+            btn.innerText = "Submit & Earn $1";
         }
     }
-
-    function uploadScreenshot() {
-        const userId = localStorage.getItem("pt_user");
-        db.collection("users").doc(userId).update({
-            screenshotUploaded: true,
-            status: "verifying"
-        }).then(() => {
-            alert("Payment proof submitted! Admin will verify shortly.");
-            document.getElementById('statusTag').innerHTML = "<b>STATUS: VERIFYING...</b><br>Proof is under review.";
-        });
-    }
-
-    function renderDashboard(data) {
-        const userId = data.email.replace(/[^a-zA-Z0-9]/g, "");
-        localStorage.setItem("pt_user", userId);
-        document.getElementById('authBox').classList.add('hidden');
-        document.getElementById('userDashboard').classList.remove('hidden');
-
-        db.collection("users").doc(userId).onSnapshot((doc) => {
-            if(doc.data().status === "active") {
-                document.getElementById('statusTag').style.borderLeftColor = "#3dfc94";
-                document.getElementById('statusTag').style.color = "#3dfc94";
-                document.getElementById('statusTag').innerHTML = "<b>VERIFIED ✅</b>";
-                document.getElementById('runBtn').disabled = false;
-                document.getElementById('runBtn').style.opacity = "1";
-            }
-        });
-    }
-
-    function startBoost() { alert("Traffic engine initialized successfully."); }
 </script>
+
 </body>
 </html>
