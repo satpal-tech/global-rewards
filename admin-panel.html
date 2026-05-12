@@ -3,36 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - $1 Task Manager</title>
+    <title>Admin Dashboard - Satpal Tech</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #eef2f7; margin: 0; padding: 20px; }
-        h2 { color: #333; text-align: center; }
-        .admin-container { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; }
+        .header { background: #1a73e8; color: white; padding: 15px; text-align: center; border-radius: 8px; margin-bottom: 20px; }
+        .container { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background-color: #007bff; color: white; }
-        tr:hover { background-color: #f1f1f1; }
-        img { width: 80px; height: auto; border-radius: 5px; cursor: pointer; transition: 0.3s; }
-        img:hover { transform: scale(3); }
-        .del-btn { background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
-        .status-tag { color: green; font-weight: bold; }
+        th { background-color: #f8f9fa; color: #555; }
+        .user-img { width: 60px; height: 60px; object-fit: cover; border-radius: 4px; cursor: pointer; border: 1px solid #ddd; }
+        .user-img:hover { transform: scale(2.5); transition: 0.3s; z-index: 10; position: relative; }
+        .btn-del { background: #d93025; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        .btn-loc { background: #34a853; color: white; text-decoration: none; padding: 6px 12px; border-radius: 4px; font-size: 13px; }
+        .rate-text { color: #188038; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="admin-container">
-    <h2>Admin Dashboard - User Submissions</h2>
+<div class="header">
+    <h1>Admin Panel - Submissions List</h1>
+</div>
+
+<div class="container">
     <table id="adminTable">
         <thead>
             <tr>
-                <th>ਨਾਮ</th>
-                <th>ਫੋਨ</th>
-                <th>ਰੇਟ</th>
-                <th>ਪਰੂਫ਼ (Photo)</th>
-                <th>ਲੋਕੇਸ਼ਨ</th>
-                <th>ਐਕਸ਼ਨ</th>
+                <th>ਨਾਮ (Name)</th>
+                <th>ਫ਼ੋਨ (Phone)</th>
+                <th>ਰੇਟ (Rate)</th>
+                <th>ਸਬੂਤ (Proof)</th>
+                <th>ਲੋਕੇਸ਼ਨ (Location)</th>
+                <th>ਐਕਸ਼ਨ (Action)</th>
             </tr>
         </thead>
         <tbody id="tableBody">
@@ -41,7 +44,7 @@
 </div>
 
 <script>
-    // ਇੱਥੇ ਆਪਣੀ ਫਾਇਰਬੇਸ ਕਨਫਿਗ ਭਰੋ
+    // ਤੁਹਾਡੀ ਫਾਇਰਬੇਸ ਕਨਫਿਗ (ਇੱਥੇ ਆਪਣੀ ਜਾਣਕਾਰੀ ਭਰੋ)
     const firebaseConfig = {
         apiKey: "ਤੁਹਾਡੀ_API_KEY",
         authDomain: "satpal-f535c.firebaseapp.com",
@@ -53,33 +56,41 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // ਡੇਟਾ ਲੋਡ ਕਰਨਾ
+    // ਡੇਟਾ ਨੂੰ Firestore ਤੋਂ ਪੜ੍ਹਨਾ (Orders collection)
     db.collection("orders").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
         const tbody = document.getElementById('tableBody');
-        tbody.innerHTML = "";
+        tbody.innerHTML = ""; // ਪੁਰਾਣਾ ਡੇਟਾ ਸਾਫ਼ ਕਰੋ
         
         snapshot.forEach((doc) => {
             const data = doc.data();
-            const id = doc.id;
+            const docId = doc.id;
             
             tbody.innerHTML += `
                 <tr>
-                    <td>${data.name}</td>
-                    <td>${data.phone}</td>
-                    <td class="status-tag">${data.rate || "$1"}</td>
-                    <td><a href="${data.photo}" target="_blank"><img src="${data.photo}" alt="Proof"></a></td>
-                    <td><a href="${data.location}" target="_blank">View Map</a></td>
-                    <td><button class="del-btn" onclick="deleteEntry('${id}')">Delete</button></td>
+                    <td><b>${data.name || 'N/A'}</b></td>
+                    <td>${data.phone || 'N/A'}</td>
+                    <td class="rate-text">${data.rate || "$1"}</td>
+                    <td>
+                        <a href="${data.photo}" target="_blank">
+                            <img src="${data.photo}" class="user-img" alt="Proof">
+                        </a>
+                    </td>
+                    <td>
+                        <a href="${data.location}" target="_blank" class="btn-loc">Map ਦੇਖੋ</a>
+                    </td>
+                    <td>
+                        <button class="btn-del" onclick="deleteEntry('${docId}')">Delete</button>
+                    </td>
                 </tr>`;
         });
     });
 
-    // ਡੇਟਾ ਡਿਲੀਟ ਕਰਨ ਲਈ ਫੰਕਸ਼ਨ
+    // ਡਿਲੀਟ ਕਰਨ ਲਈ ਫੰਕਸ਼ਨ
     async function deleteEntry(id) {
-        if(confirm("ਕੀ ਤੁਸੀਂ ਇਸ ਐਂਟਰੀ ਨੂੰ ਡਿਲੀਟ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?")) {
+        if(confirm("ਕੀ ਤੁਸੀਂ ਇਹ ਡੇਟਾ ਡਿਲੀਟ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?")) {
             try {
                 await db.collection("orders").doc(id).delete();
-                alert("Deleted!");
+                alert("Deleted Successfully!");
             } catch (error) {
                 alert("Error: " + error.message);
             }
