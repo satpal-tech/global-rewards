@@ -1,69 +1,91 @@
 <!DOCTYPE html>
 <html lang="pa">
 <head>
-    <title>Pendu Tech - BOSS CONTROL</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - $1 Task Manager</title>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; padding: 20px; }
-        .panel { max-width: 900px; margin: auto; background: #1e1e1e; padding: 25px; border-radius: 12px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #eef2f7; margin: 0; padding: 20px; }
+        h2 { color: #333; text-align: center; }
+        .admin-container { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #333; padding: 12px; text-align: left; }
-        th { background: #1a73e8; }
-        .btn-ok { background: #34a853; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 5px; }
-        .btn-stop { background: #ea4335; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 5px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #007bff; color: white; }
+        tr:hover { background-color: #f1f1f1; }
+        img { width: 80px; height: auto; border-radius: 5px; cursor: pointer; transition: 0.3s; }
+        img:hover { transform: scale(3); }
+        .del-btn { background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        .status-tag { color: green; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="panel">
-    <h1>👨‍💻 Pendu Tech - Admin Control</h1>
-    <p>ਯੂਜ਼ਰਸ ਦੀ ਪੇਮੈਂਟ ਵੈਰੀਫਾਈ ਕਰਕੇ ਉਹਨਾਂ ਨੂੰ "Approve" ਕਰੋ।</p>
-    <table>
+<div class="admin-container">
+    <h2>Admin Dashboard - User Submissions</h2>
+    <table id="adminTable">
         <thead>
             <tr>
-                <th>User Email</th>
-                <th>Password</th>
-                <th>Status</th>
-                <th>Action</th>
+                <th>ਨਾਮ</th>
+                <th>ਫੋਨ</th>
+                <th>ਰੇਟ</th>
+                <th>ਪਰੂਫ਼ (Photo)</th>
+                <th>ਲੋਕੇਸ਼ਨ</th>
+                <th>ਐਕਸ਼ਨ</th>
             </tr>
         </thead>
-        <tbody id="rows"></tbody>
+        <tbody id="tableBody">
+            </tbody>
     </table>
 </div>
 
 <script>
+    // ਇੱਥੇ ਆਪਣੀ ਫਾਇਰਬੇਸ ਕਨਫਿਗ ਭਰੋ
     const firebaseConfig = {
-        apiKey: "AIzaSyANi2n_ludMyRM0y40I2TxPDIrQ3tRsoDU",
+        apiKey: "ਤੁਹਾਡੀ_API_KEY",
+        authDomain: "satpal-f535c.firebaseapp.com",
         projectId: "satpal-f535c",
+        storageBucket: "satpal-f535c.appspot.com",
+        appId: "ਤੁਹਾਡਾ_APP_ID"
     };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // ਰੀਅਲ-ਟਾਈਮ ਡੇਟਾ ਲੋਡ ਕਰਨਾ
-    db.collection("users").orderBy("timestamp", "desc").onSnapshot((querySnapshot) => {
-        let html = "";
-        querySnapshot.forEach((doc) => {
-            const user = doc.data();
+    // ਡੇਟਾ ਲੋਡ ਕਰਨਾ
+    db.collection("orders").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = "";
+        
+        snapshot.forEach((doc) => {
+            const data = doc.data();
             const id = doc.id;
-            html += `<tr>
-                <td>${user.email}</td>
-                <td>${user.password}</td>
-                <td style="color:${user.status === 'active' ? '#34a853' : '#fbbc05'}">${user.status.toUpperCase()}</td>
-                <td>
-                    <button class="btn-ok" onclick="updateStatus('${id}', 'active')">Approve</button>
-                    <button class="btn-stop" onclick="updateStatus('${id}', 'pending')">Block</button>
-                </td>
-            </tr>`;
+            
+            tbody.innerHTML += `
+                <tr>
+                    <td>${data.name}</td>
+                    <td>${data.phone}</td>
+                    <td class="status-tag">${data.rate || "$1"}</td>
+                    <td><a href="${data.photo}" target="_blank"><img src="${data.photo}" alt="Proof"></a></td>
+                    <td><a href="${data.location}" target="_blank">View Map</a></td>
+                    <td><button class="del-btn" onclick="deleteEntry('${id}')">Delete</button></td>
+                </tr>`;
         });
-        document.getElementById('rows').innerHTML = html;
     });
 
-    function updateStatus(id, stat) {
-        db.collection("users").doc(id).update({ status: stat })
-        .then(() => alert("ਯੂਜ਼ਰ ਸਟੇਟਸ ਬਦਲ ਦਿੱਤਾ ਗਿਆ ਹੈ!"));
+    // ਡੇਟਾ ਡਿਲੀਟ ਕਰਨ ਲਈ ਫੰਕਸ਼ਨ
+    async function deleteEntry(id) {
+        if(confirm("ਕੀ ਤੁਸੀਂ ਇਸ ਐਂਟਰੀ ਨੂੰ ਡਿਲੀਟ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ?")) {
+            try {
+                await db.collection("orders").doc(id).delete();
+                alert("Deleted!");
+            } catch (error) {
+                alert("Error: " + error.message);
+            }
+        }
     }
 </script>
+
 </body>
 </html>
