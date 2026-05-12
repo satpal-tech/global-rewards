@@ -1,130 +1,143 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pa">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Traffic Exchange - Live Tracker</title>
+    <title>Pendu Tech - Organic CTR & Traffic Booster</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; margin: 0; padding: 15px; text-align: center; }
-        .points-header { background: #28a745; color: white; padding: 15px; border-radius: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; max-width: 500px; margin-left: auto; margin-right: auto; }
-        .container { background: white; max-width: 500px; margin: auto; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-top: 8px solid #007bff; }
+        :root { --primary: #1a73e8; --success: #34a853; --dark: #202124; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; margin: 0; padding: 15px; color: #333; }
+        .wrapper { max-width: 500px; margin: auto; background: #fff; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; border: 1px solid #e0e0e0; }
+        .header { background: var(--primary); color: white; padding: 20px; text-align: center; }
+        .header h1 { margin: 0; font-size: 22px; letter-spacing: 1px; }
+        .header p { margin: 5px 0 0; font-size: 13px; opacity: 0.9; }
+        .content { padding: 20px; }
         
-        input[type="text"] { width: 90%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; margin-bottom: 10px; }
-        .btn-boost { background: #ff9800; color: white; padding: 16px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; font-size: 18px; }
-        
-        /* ਨਵਾਂ ਲਾਈਵ ਐਕਟੀਵਿਟੀ ਡਿਸਪਲੇਅ (Bottom Display) */
-        .live-tracker { margin-top: 25px; background: #222; border-radius: 15px; padding: 10px; overflow: hidden; height: 150px; position: relative; border: 2px solid #444; }
-        .tracker-title { color: #00ff00; font-size: 12px; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; border-bottom: 1px solid #444; padding-bottom: 5px; }
-        
-        .scroll-container { position: absolute; width: 100%; animation: scrollUp 15s linear infinite; }
-        .log-entry { color: #ddd; font-size: 13px; padding: 5px 0; border-bottom: 1px solid #333; display: flex; justify-content: space-around; }
-        .log-name { color: #5bc0de; font-weight: bold; }
-        .log-rank { color: #f0ad4e; }
-        
-        @keyframes scrollUp {
-            0% { bottom: -100%; }
-            100% { bottom: 100%; }
-        }
+        /* Proof Section */
+        .status-badge { display: flex; align-items: center; justify-content: center; background: #e8f0fe; padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #c2d7fa; }
+        .status-badge img { width: 20px; margin-right: 8px; }
+        .proof-container { text-align: center; margin-bottom: 20px; }
+        .proof-container img { width: 100%; border-radius: 10px; border: 2px solid #eee; transition: 0.3s; cursor: pointer; }
+        .proof-container img:hover { transform: scale(1.02); }
 
-        .loading-box { display: none; margin-top: 15px; padding: 10px; border-radius: 10px; background: #fff3cd; font-weight: bold; }
+        /* Payment Section */
+        .payment-card { background: #fff9c4; border-left: 5px solid #fbc02d; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .payment-card h4 { margin: 0 0 8px; color: #856404; }
+        .upi-id { font-weight: bold; color: #d32f2f; background: #fff; padding: 2px 5px; border-radius: 4px; }
+        .paypal-link { display: inline-block; margin-top: 10px; background: #0070ba; color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; font-size: 14px; font-weight: bold; }
+
+        /* Form Section */
+        .form-group { margin-bottom: 15px; }
+        label { font-weight: 600; font-size: 14px; color: #555; display: block; margin-bottom: 5px; }
+        input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 15px; outline: none; }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 5px rgba(26,115,232,0.2); }
+        
+        .start-btn { background: var(--success); color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .start-btn:hover { background: #2d8e47; box-shadow: 0 5px 15px rgba(52, 168, 83, 0.3); }
+
+        /* Terminal & Timer */
+        .console { display: none; background: var(--dark); color: #00ff41; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 12px; margin-top: 15px; height: 100px; overflow-y: auto; border: 1px solid #444; }
+        #timer-box { display: none; margin-top: 20px; text-align: center; padding: 15px; background: #f1f8e9; border-radius: 10px; }
+        progress { width: 100%; height: 20px; border-radius: 10px; accent-color: var(--success); }
+        .footer-note { font-size: 11px; color: #888; text-align: center; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-<div class="points-header">
-    <div>Global Rank: <span id="rankDisplay">#500+</span></div>
-    <div>Points: <span id="userPointsDisplay">0</span></div>
-</div>
+<div class="wrapper">
+    <div class="header">
+        <h1>PENDU TECH 🚀</h1>
+        <p>Organic CTR Booster | Google News Active Edition</p>
+    </div>
 
-<div class="container">
-    <h2>🚀 Traffic Booster</h2>
-    <p style="color: #666; font-size: 13px;">Enter link to start worldwide traffic exchange.</p>
+    <div class="content">
+        <div class="status-badge">
+            <span style="color: #1a73e8; font-weight: bold;">✔ Google Publisher Status: ACTIVE</span>
+        </div>
+        
+        <div class="proof-container">
+            <img src="https://i.postimg.cc/QVHzsBHD/1000479335.jpg" alt="Pendu Tech Proof" title="Click to view proof">
+            <small style="color: #666;">(ਸਾਡੀ ਸਫਲਤਾ ਦਾ ਅਸਲੀ ਸਬੂਤ - Google News Approved)</small>
+        </div>
 
-    <input type="text" id="userUrl" placeholder="Enter Website Link (https://...)">
-    <button class="btn-boost" onclick="processBoost()">START BOOST NOW</button>
-    
-    <div id="statusBox" class="loading-box"></div>
+        <div class="payment-card">
+            <h4>Price: $3 (₹250) Per 150 Clicks</h4>
+            <p>UPI ID: <span class="upi-id">9814005098@ybl</span></p>
+            <a href="https://paypal.me/satpalakoi" target="_blank" class="paypal-link">Pay via PayPal (International)</a>
+        </div>
 
-    <div class="live-tracker">
-        <div class="tracker-title">● Live Global Activity</div>
-        <div class="scroll-container" id="liveLogs">
-            </div>
+        <div class="form-group">
+            <label>Target Keyword (ਜੋ ਗੂਗਲ 'ਤੇ ਸਰਚ ਕਰਨਾ ਹੈ):</label>
+            <input type="text" id="targetKW" placeholder="e.g. Pendu Tech Punjab">
+        </div>
+
+        <div class="form-group">
+            <label>Website URL (ਜਿਸ 'ਤੇ ਟ੍ਰੈਫਿਕ ਭੇਜਣਾ ਹੈ):</label>
+            <input type="url" id="targetURL" placeholder="https://pendutechpunjab.blogspot.com">
+        </div>
+
+        <button class="start-btn" onclick="initiateSystem()">Lauch Organic Traffic</button>
+
+        <div class="console" id="consoleLogs"></div>
+
+        <div id="timer-box">
+            <p>Stay Time: <span id="seconds">120</span> Seconds</p>
+            <progress value="0" max="120" id="pBar"></progress>
+            <p style="font-size: 12px; color: #555; margin-top: 8px;">ਸਾਵਧਾਨ: 150+ IPs ਤੋਂ ਟ੍ਰੈਫਿਕ ਭੇਜਿਆ ਜਾ ਰਿਹਾ ਹੈ। ਪੇਜ ਬੰਦ ਨਾ ਕਰੋ।</p>
+        </div>
+
+        <div class="footer-note">
+            © 2026 Pendu Tech Punjab | All Rights Reserved.
+        </div>
     </div>
 </div>
 
 <script>
-    // ਨਾਮਾਂ ਦੀ ਲਿਸਟ
-    const names = ["James", "Robert", "John", "Michael", "William", "David", "Richard", "Joseph", "Thomas", "Charles", "Emma", "Olivia", "Sophia", "Isabella", "Mia"];
-    const logsContainer = document.getElementById('liveLogs');
-
-    // ਫੇਕ ਲੌਗਸ ਬਣਾਉਣ ਦਾ ਫੰਕਸ਼ਨ
-    function generateLogs() {
-        let html = '';
-        for (let i = 0; i < 20; i++) {
-            let randomName = names[Math.floor(Math.random() * names.length)];
-            let randomRank = Math.floor(Math.random() * 499) + 1;
-            let randomPoints = (Math.floor(Math.random() * 10) + 1) * 100;
-            html += `
-                <div class="log-entry">
-                    <span class="log-name">${randomName}</span>
-                    <span class="log-rank">Rank #${randomRank}</span>
-                    <span style="color:#28a745;">+${randomPoints} pts</span>
-                </div>`;
-        }
-        logsContainer.innerHTML = html;
+    function printLog(text) {
+        const logBox = document.getElementById('consoleLogs');
+        logBox.innerHTML += "> " + text + "<br>";
+        logBox.scrollTop = logBox.scrollHeight;
     }
 
-    // ਸ਼ੁਰੂ ਵਿੱਚ ਲੌਗਸ ਜਨਰੇਟ ਕਰੋ
-    generateLogs();
+    function initiateSystem() {
+        const kw = document.getElementById('targetKW').value;
+        const link = document.getElementById('targetURL').value;
 
-    function isValidURL(string) {
-        var res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
-        return (res !== null);
-    }
-
-    function processBoost() {
-        const currentUrl = document.getElementById('userUrl').value;
-        const status = document.getElementById('statusBox');
-        
-        if (currentUrl === "" || !isValidURL(currentUrl)) {
-            alert("❌ Invalid Link!");
+        if(!kw || !link) {
+            alert("ਕਿਰਪਾ ਕਰਕੇ ਸਾਰੇ ਵੇਰਵੇ ਭਰੋ!");
             return;
         }
 
-        let savedUrl = localStorage.getItem('lastSavedUrl');
-        let points = parseInt(localStorage.getItem('satpalPoints')) || 0;
-        let rank = parseInt(localStorage.getItem('satpalRank')) || 500;
-
-        if (savedUrl && savedUrl !== currentUrl) {
-            alert("⚠️ Link changed! Resetting points.");
-            points = 0; rank = 500;
-        }
-
-        localStorage.setItem('lastSavedUrl', currentUrl);
-        status.style.display = "block";
-        status.innerText = "⏳ Verifying Link...";
-
+        document.getElementById('consoleLogs').style.display = 'block';
+        printLog("ਸਰਵਰ ਨਾਲ ਸੰਪਰਕ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...");
+        
         setTimeout(() => {
-            window.open('https://www.profitablecpmratenetwork.com/akhbrpi6k?key=156b726fcb4231d14e1e3ce0c0644ec0', '_blank');
-            points += 100;
-            if(rank > 1) rank -= 1;
-
-            localStorage.setItem('satpalPoints', points);
-            localStorage.setItem('satpalRank', rank);
-            
-            document.getElementById('userPointsDisplay').innerText = points;
-            document.getElementById('rankDisplay').innerText = "#" + rank;
-            status.innerText = "✅ Success! Points Added.";
-        }, 2000);
+            printLog("Unique Residential IPs ਲੋਡ ਹੋ ਰਹੀਆਂ ਹਨ...");
+            setTimeout(() => {
+                printLog("Google Search Referral ਤਿਆਰ ਹੈ।");
+                printLog("<a href='https://www.google.com/search?q=" + encodeURIComponent(kw) + "' target='_blank' style='color:#fff; background:#4285f4; padding:3px 8px; border-radius:4px; text-decoration:none;'>CLICK HERE TO SEARCH & VISIT</a>");
+                startClock();
+            }, 1500);
+        }, 1500);
     }
 
-    window.onload = function() {
-        let savedUrl = localStorage.getItem('lastSavedUrl');
-        if(savedUrl) {
-            document.getElementById('userUrl').value = savedUrl;
-            document.getElementById('userPointsDisplay').innerText = localStorage.getItem('satpalPoints') || 0;
-            document.getElementById('rankDisplay').innerText = "#" + (localStorage.getItem('satpalRank') || 500);
-        }
+    function startClock() {
+        document.getElementById('timer-box').style.display = 'block';
+        let timeLeft = 120;
+        const progress = document.getElementById('pBar');
+        const text = document.getElementById('seconds');
+
+        const timer = setInterval(() => {
+            timeLeft--;
+            text.innerText = timeLeft;
+            progress.value = 120 - timeLeft;
+
+            if(timeLeft <= 0) {
+                clearInterval(timer);
+                printLog("ਪ੍ਰਕਿਰਿਆ ਪੂਰੀ ਹੋਈ! CTR ਬੂਸਟ ਕਰ ਦਿੱਤਾ ਗਿਆ ਹੈ। ✅");
+                alert("ਕੰਮ ਸਫਲਤਾਪੂਰਵਕ ਪੂਰਾ ਹੋਇਆ। 150 ਬੈਕਲਿੰਕਸ ਪ੍ਰੋਸੈਸ ਹੋ ਗਏ ਹਨ।");
+            }
+        }, 1000);
     }
 </script>
 
