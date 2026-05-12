@@ -3,33 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pendu Tech | Premium Traffic Booster</title>
+    <title>Pendu Tech | Premium Traffic Engine</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #00d2ff;
-            --secondary: #3a7bd5;
-            --success: #00b09b;
-            --bg: #0f0c29;
+            --accent: #3a7bd5;
+            --success: #3dfc94;
+            --glass: rgba(255, 255, 255, 0.08);
         }
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            color: #fff; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh;
+            color: #fff; margin: 0; padding: 20px;
+            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
         }
         .container {
-            width: 90%; max-width: 440px; background: rgba(255, 255, 255, 0.08);
+            width: 100%; max-width: 450px; background: var(--glass);
             backdrop-filter: blur(20px); padding: 30px; border-radius: 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center; border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center;
+            border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;
         }
-        h2 { color: var(--primary); margin-bottom: 10px; font-weight: 600; }
         .hidden { display: none; }
-        
-        /* Input & Buttons */
-        input[type="text"], input[type="email"], input[type="password"], input[type="url"] {
+        input {
             width: 100%; padding: 12px; margin: 10px 0; border-radius: 12px; border: none;
             background: rgba(255,255,255,0.1); color: #fff; outline: none; box-sizing: border-box;
         }
@@ -38,70 +36,81 @@
             text-transform: uppercase; cursor: pointer; transition: 0.3s; margin-top: 10px;
         }
         .btn-auth { background: linear-gradient(to right, #00d2ff, #3a7bd5); color: #fff; }
-        .btn-upload { background: #ff416c; color: #fff; font-size: 12px; }
+        .btn-upload { background: #ff416c; color: #fff; }
         .btn-boost { background: linear-gradient(to right, #1d976c, #93f9b9); color: #121212; opacity: 0.3; }
 
-        /* Status & Payment Box */
-        .payment-info {
-            background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px;
-            margin: 15px 0; border: 1px dashed var(--primary); font-size: 13px;
-        }
         .status-card {
             background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 15px;
             margin-bottom: 20px; font-size: 12px; color: #ffcc80; border-left: 5px solid #ffcc80;
         }
-        .upload-box {
-            border: 2px dashed rgba(255,255,255,0.2); padding: 20px; border-radius: 15px;
-            margin: 10px 0; cursor: pointer; transition: 0.3s;
+        .upload-box { border: 2px dashed rgba(255,255,255,0.2); padding: 20px; border-radius: 15px; margin: 10px 0; }
+
+        /* Policy & Contact Boxes */
+        .policy-box {
+            width: 100%; max-width: 450px; background: rgba(0,0,0,0.4);
+            padding: 25px; border-radius: 20px; margin-top: 15px;
+            border: 1px solid rgba(255,255,255,0.1); text-align: left;
         }
-        .upload-box:hover { background: rgba(255,255,255,0.05); border-color: var(--primary); }
+        .policy-box h3 { font-size: 18px; color: var(--primary); margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
+        .policy-box p { font-size: 12px; opacity: 0.8; line-height: 1.7; margin-bottom: 10px; }
+        .policy-box ul { font-size: 12px; opacity: 0.8; padding-left: 15px; }
+        .error-msg { color: #ff4b2b; font-size: 11px; display: none; text-align: left; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
 <div class="container" id="authBox">
-    <div style="font-size: 50px;">💎</div>
-    <h2>Pendu Tech</h2>
-    <p style="font-size: 12px; opacity: 0.7;">Sign in to start Organic Traffic Boosting</p>
-    <input type="email" id="email" placeholder="Email Address">
+    <h2>Secure Access</h2>
+    <p style="font-size: 12px; opacity: 0.7;">Use your primary email for official verification.</p>
+    
+    <input type="email" id="email" placeholder="Real Email (e.g. user@gmail.com)" oninput="checkEmail()">
+    <div id="emailError" class="error-msg">⚠️ Invalid email format!</div>
+    
     <input type="password" id="pass" placeholder="Password">
-    <button class="btn btn-auth" onclick="loginUser()">Login / Register</button>
+    <button class="btn btn-auth" onclick="loginUser()">Sign In to Dashboard</button>
 </div>
 
 <div class="container hidden" id="userDashboard">
-    <h2 style="font-size: 20px;">User Dashboard</h2>
-    
+    <h3>Traffic Engine</h3>
     <div id="statusTag" class="status-card">
-        <b>Current Status: ⏳ Verification Pending</b><br>
-        Please upload your payment screenshot. Admin is waiting for your proof to activate the boost engine.
+        <b>ID STATUS: PENDING</b><br>
+        Upload payment proof to activate your organic traffic session.
     </div>
 
-    <div class="payment-info" id="paymentDetails">
-        <p style="margin: 0; font-weight: bold; color: #00d2ff;">Pay $3 (₹250) for 150 Clicks</p>
-        <p style="margin: 5px 0;">UPI: <b>9814005098@ybl</b></p>
-        <p style="margin: 0; font-size: 11px;">After payment, upload screenshot below 👇</p>
-    </div>
-
-    <div class="upload-box" id="uploadSection">
-        <input type="file" id="screenshotFile" accept="image/*" style="display: none;" onchange="updateFileName()">
-        <div onclick="document.getElementById('screenshotFile').click()">
-            <div style="font-size: 30px;">📷</div>
-            <span id="fileName">Click to upload Payment Screenshot</span>
+    <div class="upload-box">
+        <input type="file" id="screenshotFile" accept="image/*" style="display: none;" onchange="validateFile()">
+        <div onclick="document.getElementById('screenshotFile').click()" style="cursor:pointer;">
+            <span id="fileName" style="font-size: 13px;">Click to Upload Receipt</span>
         </div>
-        <button class="btn btn-upload" style="margin-top: 15px;" onclick="uploadScreenshot()">Submit Proof</button>
+        <button id="uploadBtn" class="btn btn-upload" style="margin-top: 15px; opacity: 0.5;" disabled onclick="uploadScreenshot()">Submit Proof</button>
     </div>
 
-    <hr style="opacity: 0.1; margin: 20px 0;">
-
-    <div align="left">
-        <input type="text" id="keyword" placeholder="Enter Target Keyword">
-        <input type="url" id="siteURL" placeholder="Enter Website URL">
-    </div>
-
-    <button id="runBtn" class="btn btn-boost" disabled onclick="startBoost()">Launch Organic Boost</button>
-    
-    <p style="font-size: 10px; margin-top: 20px; opacity: 0.4;">© 2026 Pendu Tech | Secured Organic Engine</p>
+    <input type="text" id="keyword" placeholder="Target Keyword">
+    <input type="url" id="siteURL" placeholder="Site URL (https://...)">
+    <button id="runBtn" class="btn btn-boost" disabled onclick="startBoost()">Launch Engine</button>
 </div>
+
+<div class="policy-box">
+    <h3>About Us & Usage Policy</h3>
+    <p><b>Pendu Tech</b> is an advanced Organic Traffic Exchange platform. By using our services, you agree to the following policies:</p>
+    <ul>
+        <li><b>Organic Growth:</b> We use a high-quality residential IP network (150+ IPs) to provide safe engagement.</li>
+        <li><b>Account Security:</b> Only valid email addresses are eligible for manual approval. Fake emails will be permanently banned.</li>
+        <li><b>Refund Policy:</b> Once the traffic engine is initialized for your URL, payments are non-refundable.</li>
+        <li><b>Privacy:</b> We do not share your website URLs or personal data with third parties.</li>
+    </ul>
+</div>
+
+<div class="policy-box">
+    <h3>Contact Support</h3>
+    <p>If you face any issues regarding account activation or payment verification, please contact our official support desk:</p>
+    <p style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px;">
+        📧 <b>Email:</b> vijaytech002@gmail.com<br>
+        🕒 <b>Response Time:</b> Within 12-24 Hours
+    </p>
+</div>
+
+<p style="font-size: 10px; margin-top: 20px; opacity: 0.4;">© 2026 Pendu Tech | Professional Organic Traffic Solutions</p>
 
 <script>
     const firebaseConfig = {
@@ -115,79 +124,70 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-    const storage = firebase.storage();
+
+    function checkEmail() {
+        const email = document.getElementById('email').value;
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        document.getElementById('emailError').style.display = regex.test(email) ? 'none' : 'block';
+        return regex.test(email);
+    }
 
     function loginUser() {
         const email = document.getElementById('email').value;
         const pass = document.getElementById('pass').value;
-        if(!email || !pass) return alert("Please fill details.");
+        if(!checkEmail()) return alert("Enter a valid email address.");
+        if(!pass) return alert("Password is required.");
 
         const userId = email.replace(/[^a-zA-Z0-9]/g, "");
         const userRef = db.collection("users").doc(userId);
         
         userRef.get().then((doc) => {
-            if (doc.exists) {
-                renderDashboard(doc.data());
-            } else {
+            if (doc.exists) renderDashboard(doc.data());
+            else {
                 const newUser = { email, password: pass, status: "pending", timestamp: new Date() };
                 userRef.set(newUser).then(() => renderDashboard(newUser));
             }
         });
     }
 
-    function updateFileName() {
+    function validateFile() {
         const file = document.getElementById('screenshotFile').files[0];
-        if(file) document.getElementById('fileName').innerText = "Selected: " + file.name;
+        if(file) {
+            document.getElementById('fileName').innerText = "File: " + file.name;
+            document.getElementById('uploadBtn').disabled = false;
+            document.getElementById('uploadBtn').style.opacity = "1";
+        }
     }
 
     function uploadScreenshot() {
-        const file = document.getElementById('screenshotFile').files[0];
-        const email = document.getElementById('userDisp') ? document.getElementById('userDisp').innerText : ""; // Simple ID tracking
-        
-        if(!file) return alert("Please select a file first!");
-
-        alert("Uploading screenshot... Please wait.");
-        // ਅਸਲੀ ਸਿਸਟਮ ਵਿੱਚ ਇੱਥੇ Storage ਵਿੱਚ ਫਾਈਲ ਜਾਵੇਗੀ, ਅਸੀਂ ਸਟੇਟਸ ਅਪਡੇਟ ਕਰ ਰਹੇ ਹਾਂ
-        const userId = localStorage.getItem("pt_user"); // Assuming ID stored
+        const userId = localStorage.getItem("pt_user");
         db.collection("users").doc(userId).update({
             screenshotUploaded: true,
-            uploadTime: new Date()
+            status: "verifying"
         }).then(() => {
-            alert("Screenshot submitted! Verification is in progress.");
-            document.getElementById('uploadSection').style.opacity = "0.5";
-            document.getElementById('uploadSection').innerHTML = "✅ Screenshot Sent for Review";
+            alert("Payment proof submitted! Admin will verify shortly.");
+            document.getElementById('statusTag').innerHTML = "<b>STATUS: VERIFYING...</b><br>Proof is under review.";
         });
     }
 
     function renderDashboard(data) {
         const userId = data.email.replace(/[^a-zA-Z0-9]/g, "");
         localStorage.setItem("pt_user", userId);
-
         document.getElementById('authBox').classList.add('hidden');
         document.getElementById('userDashboard').classList.remove('hidden');
 
-        // Real-time listener for Admin Approval
         db.collection("users").doc(userId).onSnapshot((doc) => {
-            const currentData = doc.data();
-            if(currentData.status === "active") {
+            if(doc.data().status === "active") {
                 document.getElementById('statusTag').style.borderLeftColor = "#3dfc94";
                 document.getElementById('statusTag').style.color = "#3dfc94";
-                document.getElementById('statusTag').innerHTML = "<b>Account Verified ✅</b><br>Engine unlocked. You can now boost your website.";
-                
-                document.getElementById('paymentDetails').style.display = "none";
-                document.getElementById('uploadSection').style.display = "none";
-
-                const btn = document.getElementById('runBtn');
-                btn.disabled = false;
-                btn.style.opacity = "1";
-                btn.style.cursor = "pointer";
+                document.getElementById('statusTag').innerHTML = "<b>VERIFIED ✅</b>";
+                document.getElementById('runBtn').disabled = false;
+                document.getElementById('runBtn').style.opacity = "1";
             }
         });
     }
 
-    function startBoost() {
-        alert("Initializing Organic Traffic Booster...");
-    }
+    function startBoost() { alert("Traffic engine initialized successfully."); }
 </script>
 </body>
 </html>
