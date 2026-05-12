@@ -3,90 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Submit Proof - $1 Payment</title>
+    <title>Earn Rewards - Surf Websites</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-storage-compat.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; text-align: center; padding: 20px; }
-        .container { background: white; padding: 20px; border-radius: 10px; max-width: 400px; margin: auto; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
-        .rate-tag { background: #28a745; color: white; padding: 10px; border-radius: 5px; font-weight: bold; margin-bottom: 20px; font-size: 1.2em; }
-        input { width: 90%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
-        button { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; font-size: 1em; }
-        button:hover { background: #0056b3; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; margin: 0; padding: 0; }
+        .header { background: #d32f2f; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .container { max-width: 800px; margin: 20px auto; padding: 10px; }
+        .website-card { background: white; border-radius: 8px; padding: 15px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-left: 5px solid #ff9800; }
+        .info { flex-grow: 1; margin-left: 15px; }
+        .title { font-weight: bold; color: #007bff; font-size: 1.1em; text-decoration: none; cursor: pointer; }
+        .points-badge { background: #fff3e0; color: #e65100; padding: 5px 12px; border-radius: 20px; font-weight: bold; border: 1px solid #ffcc80; }
+        .visit-btn { background: #d32f2f; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; text-decoration: none; font-size: 0.9em; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Submit Your Details</h2>
-    <div class="rate-tag">Payment Rate: $1 Per Task</div>
+<div class="header">
+    <div style="font-size: 1.5em; font-weight: bold;">Satpal Rewards</div>
+    <div>Balance: <span>$1.00</span></div>
+</div>
 
-    <input type="text" id="userName" placeholder="ਤੁਹਾਡਾ ਨਾਮ (Full Name)">
-    <input type="text" id="userPhone" placeholder="ਪੇਟੀਐਮ ਜਾਂ ਫੋਨ ਨੰਬਰ">
-    <input type="text" id="userLocation" placeholder="ਲੋਕੇਸ਼ਨ ਲਿੰਕ">
-    <p style="text-align:left; margin-left:20px;">Proof ਫੋਟੋ ਚੁਣੋ:</p>
-    <input type="file" id="userPhoto" accept="image/*">
-    
-    <button onclick="submitData()" id="subBtn">Submit & Earn $1</button>
+<div class="container">
+    <div id="websiteList">Loading websites...</div>
 </div>
 
 <script>
-    // ਇੱਥੇ ਆਪਣੀ ਫਾਇਰਬੇਸ ਕਨਫਿਗ ਭਰੋ
     const firebaseConfig = {
-        apiKey: "ਤੁਹਾਡੀ_API_KEY",
-        authDomain: "satpal-f535c.firebaseapp.com",
-        projectId: "satpal-f535c",
-        storageBucket: "satpal-f535c.appspot.com",
-        messagingSenderId: "ਤੁਹਾਡਾ_SENDER_ID",
-        appId: "ਤੁਹਾਡਾ_APP_ID"
+      apiKey: "AIzaSyANi2n_ludMyRM0y40i2TxPDIrQ3tRsoDU",
+      authDomain: "satpal-f535c.firebaseapp.com",
+      projectId: "satpal-f535c",
+      storageBucket: "satpal-f535c.firebasestorage.app",
+      messagingSenderId: "480222653659",
+      appId: "1:480222653659:web:8408ba7ccc5a34c09ef0fe",
+      measurementId: "G-7FZY6DB1QJ"
     };
     
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-    const storage = firebase.storage();
 
-    async function submitData() {
-        const name = document.getElementById('userName').value;
-        const phone = document.getElementById('userPhone').value;
-        const loc = document.getElementById('userLocation').value;
-        const file = document.getElementById('userPhoto').files[0];
-        const btn = document.getElementById('subBtn');
-
-        if(!name || !phone || !file) {
-            return alert("ਕਿਰਪਾ ਕਰਕੇ ਸਾਰੀ ਜਾਣਕਾਰੀ ਭਰੋ ਅਤੇ ਫੋਟੋ ਚੁਣੋ।");
-        }
-
-        btn.disabled = true;
-        btn.innerText = "Processing...";
-
-        try {
-            // 1. Storage ਵਿੱਚ ਫੋਟੋ ਅਪਲੋਡ ਕਰਨਾ
-            const storageRef = storage.ref('proofs/' + Date.now() + "_" + file.name);
-            const uploadTask = await storageRef.put(file);
-            const photoUrl = await uploadTask.ref.getDownloadURL();
-
-            // 2. Firestore ਵਿੱਚ ਡੇਟਾ ਸੇਵ ਕਰਨਾ
-            await db.collection("orders").add({
-                name: name,
-                phone: phone,
-                location: loc,
-                photo: photoUrl,
-                rate: "$1",
-                status: "Pending",
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-
-            alert("ਸਫਲਤਾਪੂਰਵਕ ਸਬਮਿਟ ਹੋ ਗਿਆ! ਤੁਹਾਨੂੰ $1 ਜਲਦੀ ਮਿਲੇਗਾ।");
-            location.reload();
-        } catch (error) {
-            console.error(error);
-            alert("ਐਰਰ: " + error.message);
-            btn.disabled = false;
-            btn.innerText = "Submit & Earn $1";
-        }
+    async function loadWebsites() {
+        const listDiv = document.getElementById('websiteList');
+        const snapshot = await db.collection("orders").get();
+        listDiv.innerHTML = "";
+        
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            listDiv.innerHTML += `
+                <div class="website-card">
+                    <div class="points-badge">50</div>
+                    <div class="info">
+                        <a href="${data.location}" target="_blank" class="title">${data.name || 'View Website'}</a>
+                    </div>
+                    <a href="${data.location}" target="_blank" class="visit-btn">Visit</a>
+                </div>
+            `;
+        });
     }
+    window.onload = loadWebsites;
 </script>
-
 </body>
 </html>
